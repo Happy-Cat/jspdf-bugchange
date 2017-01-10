@@ -13438,12 +13438,13 @@ function html2canvas(nodeList, options) {
     }
     var node = ((nodeList === undefined) ? [document.documentElement] : ((nodeList.length) ? nodeList : [nodeList]))[0];
     node.setAttribute(html2canvasNodeAttribute + index, index);
-    // zkx_node_change
+    // zkx_node_change 当当前模块top为负的时候扩大绘制范围
     var node_change = getBounds(node);
     var domHeight = node.offsetHeight;
     if(node_change.top<0){
         domHeight = domHeight - node_change.top;
     }
+    // 将获取当前屏幕的大小改为当前model的大小 node.offsetWidth, domHeight
     return renderDocument(node.ownerDocument, options, node.offsetWidth, domHeight, index).then(function(canvas) {
         if (typeof(options.onrendered) === "function") {
             log("options.onrendered is deprecated, html2canvas returns a Promise containing the canvas");
@@ -13527,7 +13528,7 @@ function crop(canvas, bounds) {
     croppedCanvas.height =  bounds.height;
     var width = x2-x1;
     var height = y2-y1;
-    //zkx_change
+    //zkx_change 当模块top为负的时绘制的图像大小为画布大小
     if(bounds.top < 0){
         height = bounds.height;
     }
